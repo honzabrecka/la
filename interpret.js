@@ -6,8 +6,6 @@ const {
   zipObj
 } = require('ramda')
 
-const fs = require('fs')
-
 const tokenize = pipe(trim, replace(/\(/g, '( '), replace(/\)/g, ' )'), split(/\s+/))
 
 const ast = curryN(2, (list, tokens) => {
