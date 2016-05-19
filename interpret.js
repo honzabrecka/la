@@ -1,5 +1,5 @@
 const {
-  append, apply, curry, filter,
+  append, apply, curryN, filter,
   head, isArrayLike, length, map,
   merge, nth, pipe, replace,
   split, tail, trim, values,
@@ -10,7 +10,7 @@ const fs = require('fs')
 
 const tokenize = pipe(trim, replace(/\(/g, '( '), replace(/\)/g, ' )'), split(/\s+/))
 
-const ast = curry((list, tokens) => {
+const ast = curryN(2, (list, tokens) => {
   if (length(tokens) == 0) {
     return list
   }
@@ -26,22 +26,27 @@ const ast = curry((list, tokens) => {
 
 const parse = pipe(tokenize, ast([]))
 
-const evaluate = curry((env, x) => {
+const evaluate = curryN(2, (env, x, defName) => {
   if (!isArrayLike(x)) {
     return env[x]
   }
   if (x[0] === 'def') {
     const [, name, exp] = x
-    env[name] = evaluate(env, exp)
+    env[name] = evaluate(env, exp, name)
     return
   }
   if (x[0] === '#') {
     const [, params, body] = x
-    return (...args) => evaluate(merge(env, zipObj(params, args)), body)
+    const closure = (...args) => evaluate(merge(env, zipObj(params, args)), body)
+    closure.expr = exprToString(x)
+    closure.exprName = defName
+    return closure
   }
   const [name, ...rest] = x
   return apply(evaluate(env, name), map(evaluate(env), rest))
 })
+
+const exprToString = (expr) => `(${map((e) => isArrayLike(e) ? exprToString(e) : e, expr).join(' ')})`
 
 const la = pipe(parse, map(evaluate({})))
 
@@ -50,5 +55,6 @@ module.exports = {
   ast,
   parse,
   evaluate,
+  exprToString,
   la
 }
