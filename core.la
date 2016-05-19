@@ -1,0 +1,97 @@
+(def identity (# (x) x))
+
+(def select-first (# (x _) x))
+
+(def select-second (# (_ y) y))
+
+(def true (# (x _) x))
+
+(def false (# (_ y) y))
+
+(def not (# (x) (x false true)))
+
+(def and (# (x y) (x y false)))
+
+(def or (# (x y) (x true y)))
+
+(def bool-equal? (# (x y) (x y (not y))))
+
+(def if (# (predicate success fail) ((predicate success fail))))
+
+(def succ (# (n) (# (s) (s false n))))
+
+(def 0? (# (n) (n true)))
+
+(def pred (# (n) ((0? n) n (n false))))
+
+(def 0 identity)
+(def 1 (succ 0))
+(def 2 (succ 1))
+(def 3 (succ 2))
+(def 4 (succ 3))
+(def 5 (succ 4))
+(def 6 (succ 5))
+(def 7 (succ 6))
+(def 8 (succ 7))
+(def 9 (succ 8))
+(def 10 (succ 9))
+(def 11 (succ 10))
+(def 12 (succ 11))
+(def 13 (succ 12))
+(def 14 (succ 13))
+(def 15 (succ 14))
+(def 16 (succ 15))
+(def 17 (succ 16))
+(def 18 (succ 17))
+(def 19 (succ 18))
+(def 20 (succ 19))
+
+(def + (# (x y)
+            (if (0? y)
+                (# () x)
+                (# () (+ (succ x) (pred y))))))
+
+(def - (# (x y)
+            (if (0? y)
+                (# () x)
+                (# () (- (pred x) (pred y))))))
+
+(def * (# (x y)
+          (if (0? y)
+              (# () 0)
+              (# () (+ x (* x (pred y)))))))
+
+(def __/ (# (x y)
+            (if (> y x)
+                (# () 0)
+                (# () (succ (__/ (- x y) y))))))
+(def / (# (x y)
+          (if (0? y)
+              (# () 0)
+              (# () (__/ x y)))))
+
+(def ^ (# (n pow)
+          (if (0? pow)
+              (# () 1)
+              (# () (* n (^ n (pred pow)))))))
+
+(def abs-diff (# (x y) (+ (- x y) (- y x))))
+
+(def = (# (x y) (0? (abs-diff x y))))
+
+(def > (# (x y) (not (0? (- x y)))))
+
+(def >= (# (x y) (0? (- y x))))
+
+(def < (# (x y) (> y x)))
+
+(def <= (# (x y) (>= y x)))
+
+(def __% (# (x y)
+            (if (< x y)
+                (# () x)
+                (# () (__% (- x y) y)))))
+(def % (# (x y)
+          (if (0? y)
+              (# () x)
+              (# () (__% x y)))))

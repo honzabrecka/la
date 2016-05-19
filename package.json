@@ -1,0 +1,21 @@
+{
+  "name": "la-interpret",
+  "version": "0.0.1",
+  "description": "An interpret for la programming language.",
+  "keywords": [
+    "interpret",
+    "la",
+    "lambda",
+    "calculus",
+    "parser"
+  ],
+  "author": "jan.brecka@gmail.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:honzabrecka/la.git"
+  },
+  "dependencies": {
+    "ramda": "0.17.*"
+  }
+}

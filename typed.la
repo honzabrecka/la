@@ -1,0 +1,15 @@
+(def construct (# (type value) (# (s) (s type value))))
+
+(def type (# (obj) (obj select-first)))
+
+(def value (# (obj) (obj select-second)))
+
+(def is? (# (t obj) (= (type obj) t)))
+
+
+
+(def BOOL 1)
+
+(def TRUE (construct BOOL true))
+
+(def FALSE (construct BOOL false))
