@@ -35,10 +35,10 @@ const evaluate = curryN(2, (env, x, defName) => {
   }
   if (x[0] === '#') {
     const [, params, body] = x
-    const closure = (...args) => evaluate(merge(env, zipObj(params, args)), body)
-    closure.expr = exprToString(x)
-    closure.exprName = defName
-    return closure
+    const lambda = (...args) => evaluate(merge(env, zipObj(params, args)), body)
+    lambda.expr = exprToString(x)
+    lambda.exprName = defName
+    return lambda
   }
   const [name, ...rest] = x
   return apply(evaluate(env, name), map(evaluate(env), rest))
