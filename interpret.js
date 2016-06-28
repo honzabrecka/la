@@ -1,7 +1,7 @@
 const {
   append, apply, curryN, filter,
-  head, isArrayLike, length, map,
-  merge, nth, pipe, replace,
+  head, isArrayLike, join, length,
+  map, merge, nth, pipe, replace,
   split, tail, trim, values,
   zipObj
 } = require('ramda')
@@ -44,7 +44,9 @@ const evaluate = curryN(2, (env, x, defName) => {
   return apply(evaluate(env, name), map(evaluate(env), rest))
 })
 
-const exprToString = (expr) => `(${map((e) => isArrayLike(e) ? exprToString(e) : e, expr).join(' ')})`
+const wrap = curryN(3, (start, end, value) => start + value + end)
+
+const exprToString = pipe(map((exp) => isArrayLike(exp) ? exprToString(exp) : exp), join(' '), wrap('(', ')'))
 
 const la = pipe(parse, map(evaluate({})))
 
